@@ -10,7 +10,8 @@ var express = require('express'),
 
 app.use('/', express.static(__dirname + '/public'))
 app.use('/game/:room', express.static(__dirname + '/public/game'))
-server.listen(3000)
+//server.listen(3000)
+server.listen(process.env.PORT)
 console.log('Listening on 3000')
 
 var serverTickRate = 64;
