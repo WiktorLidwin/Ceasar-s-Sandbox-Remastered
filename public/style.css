@@ -1,0 +1,133 @@
+* {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+  }
+  body{
+    background-color:#e5ecff;
+    text-align:center;
+  }
+  #ikcg{
+    display:inherit;
+    font-family:Trebuchet MS, Helvetica, sans-serif;
+    text-align:center;
+    font-weight:700;
+    font-size:69px;
+    padding:175px 10px 0 10px;
+    height:275px;
+    width:100%;
+  }
+  #iz6h{
+    font-family:Trebuchet MS, Helvetica, sans-serif;
+    text-align:center;
+    width:100%;
+    height:10%;
+    color:rgba(0,0,0,0.55);
+    font-size:24px;
+  }
+  #iw3g{
+    width:100vw;
+    height:10vh;
+    padding:0 10px 10px 10px;
+    justify-content:flex-start;
+    flex-direction:row;
+    text-align:left;
+  }
+  #i7tb{
+    align-self:stretch;
+    flex:1 1 100%;
+    font-family:Trebuchet MS, Helvetica, sans-serif;
+    max-width:100%;
+    text-align:right;
+    display:block;
+  }
+  #i9vi4{
+    background-color:#3a63d4;
+    margin:15px 0 15px 5px;
+    padding:20px 30px 20px 30px;
+    font-family:Trebuchet MS, Helvetica, sans-serif;
+    font-size:20px;
+    border:1px solid #005fc6;
+    border-radius:10px 10px 10px 10px;
+    width:12.5vw;
+    text-align:center;
+    display:inherit;
+    height:5.5vh;
+  }
+  #ityz1{
+    width:25vw;
+    height:5.5vh;
+    border-radius:10px 10px 10px 10px;
+    font-size:20px;
+    font-family:Trebuchet MS, Helvetica, sans-serif;
+    margin:15px 0 15px 0;
+    padding:20px 30px 20px 30px;
+    text-align:center;
+  }
+  #i42yc{
+    color:#af1818;
+    font-size:30px;
+    text-align:center;
+    width:100vw;
+    font-weight:500;
+    display:inherit;
+  }
+  #iccoj{
+    background-color:#3a63d4;
+    margin:15px 0 15px 0;
+    padding:20px 30px 20px 30px;
+    font-family:Trebuchet MS, Helvetica, sans-serif;
+    font-size:20px;
+    border:1px solid rgb(0, 95, 198);
+    border-radius:10px 10px 10px 10px;
+    width:25vw;
+    height:5.5vh;
+    text-align:center;
+  }
+  #ibzbi{
+    align-self:stretch;
+    flex:1 1 100%;
+    font-family:Trebuchet MS, Helvetica, sans-serif;
+    max-width:100%;
+    text-align:left;
+    display:block;
+  }
+  #i0zdk{
+    text-align:center;
+    display:flex;
+    flex:1 1 100%;
+    align-self:stretch;
+    align-items:center;
+    justify-content:center;
+    padding:0 5px 0 5px;
+  }
+  #imunm{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0 5px 5px 5px;
+  }
+  #il87y{
+    padding:10px 10px 0 10px;
+  }
+  #ioh11{
+    padding:0 10px 10px 10px;
+    flex-direction:row;
+    font-family:Trebuchet MS, Helvetica, sans-serif;
+    text-align:center;
+    text-transform:none;
+  }
+  #ingpq{
+    background-color:#3a63d4;
+    margin:15px 5px 15px 0;
+    padding:20px 30px 20px 30px;
+    font-family:Trebuchet MS, Helvetica, sans-serif;
+    font-size:20px;
+    border:1px solid rgb(0, 95, 198);
+    border-radius:10px 10px 10px 10px;
+    width:12.5vw;
+    height:5.5vh;
+    text-align:center;
+  }
+  

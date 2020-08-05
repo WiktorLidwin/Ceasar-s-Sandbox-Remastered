@@ -1,0 +1,226 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+body{
+  background-color:#e5ecff;
+}
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+#i1ug{
+  width:100vw;
+  height:75vh;
+  background-color:rgba(0,0,0,0.65);
+ 
+}
+#ikz4{
+  display:inherit;
+  font-family:Trebuchet MS, Helvetica, sans-serif;
+  font-weight:600;
+  color:white;
+}
+#i40u{
+  background-color:rgba(0,0,0,0.65);
+  font-family:Trebuchet MS, Helvetica, sans-serif;
+  width:100vw;
+  height:7vh;
+  max-height:7vh;
+  padding:0;
+}
+#io33g{
+  font-weight:600;
+  width:100%;
+  height:50px;
+  text-align:right;
+  color:white;
+}
+#inysj{
+  width:100%;
+  height:100%;
+  text-align:center;
+  font-weight:600;
+  font-family:Trebuchet MS, Helvetica, sans-serif;
+  font-size:40px;
+  color:white;
+}
+#i45et{
+  text-align:center;
+  align-self:center;
+}
+#inwz4{
+  height:18vh;
+  background-color:rgba(0,0,0,0.52);
+  padding-top: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+}
+#i45et{
+  text-align:center;
+  align-self:center;
+}
+#inwz4{
+  height:18vh;
+  background-color:rgba(0,0,0,0.52);
+}
+#ihwv8{
+  text-align:center;
+  align-self:center;
+}
+
+.ClassBtns{
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  visibility: hidden;
+  width:12vh;
+  height:15vh;
+  border:10px solid #0060c7;
+  border-radius:13px 13px 13px 13px;
+}
+
+#gameOverText{
+  display: none;
+  width:100%;
+  height:100%;
+  text-align:center;
+  font-weight:600;
+  font-family:Trebuchet MS, Helvetica, sans-serif;
+  font-size:40px;
+  color:white;
+}
+
+#i5ynm{ 
+}
+#ikr7t{
+}
+#ic3vn{
+
+}
+#iwwji{
+  text-align:center;
+  align-self:center;
+}
+#iev9c{
+  text-align:center;
+  align-self:center;
+}
+#i18nl{
+  text-align:center;
+  align-self:center;
+}
+#iooq4{
+  text-align:center;
+  align-self:center;
+}
+#ik0c7{
+  text-align:center;
+  align-self:center;
+}
+
+#in2uv{
+  text-align:center;
+  align-self:center;
+}
+#iyhld{
+  width:40%;
+  height:80%;
+  border:10px solid #0060c7;
+  border-radius:10px 10px 10px 10px;
+}
+#ij7lf{
+  background-color:rgba(0,0,0,0.65);
+  min-height:75vh;
+  max-height:75vh;
+  padding:0;
+  margin: 0;
+  align-items:flex-start;
+  justify-content:flex-start;
+}
+#idy0c{
+  display:flex;
+  background-color:none;
+  align-items:center;
+  justify-content:center; 
+  align-self:center;
+}
+
+#i0wok{
+  display: none;
+  width:20vw;
+  height:10vh;
+  font-family:Trebuchet MS, Helvetica, sans-serif;
+  font-weight:600;
+  font-size:30px;
+  border-radius:15px 15px 15px 15px;
+  background-color:#095a5e;
+  border:1px solid #105030;
+}
+
+#ityz1{
+  width:25vw;
+  height:5.5vh;
+  border-radius:10px 10px 10px 10px;
+  font-size:20px;
+  font-family:Trebuchet MS, Helvetica, sans-serif;
+  margin:15px 0 15px 0;
+  padding:20px 30px 20px 30px;
+  text-align:center;
+}
+
+#gameChatInput{
+  width:100%;
+  height:18%;
+  display: none;
+}
+
+#gameChatTextBox{
+  width:100%;
+  height:75%;
+  min-height:75%;
+  display: none;
+  background-color:rgba(0,0,0,0.65);
+  color:white;
+  resize: none;
+}
+
+::selection {
+  color: none;
+  background: none;
+}
+.SubmitBtn{ 
+  width:20vw;
+  height:10vh;
+  font-family:Trebuchet MS, Helvetica, sans-serif;
+  font-weight:600;
+  font-size:30px;
+  border-radius:15px 15px 15px 15px;
+  background-color:#095a5e;
+  border:1px solid #105030;
+  transform:translateX(20vw) translateY(-4vh);
+  
+}
+.SubmitBtnDiv{
+  position: absolute;
+  display:flex;
+  align-items:flex-end;
+  justify-content:flex-end ;
+  background-color:none;
+  text-align:right;
+  align-self:flex-end;  
+}
+
+#gameChatCell{
+  text-align:center;
+  align-self:center;
+  flex-basis:150%;
+}
