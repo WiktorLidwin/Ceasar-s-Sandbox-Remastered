@@ -14,7 +14,7 @@ var ClassBtn5 = document.getElementById("ClassBtn5");
 var ClassBtn6 = document.getElementById("ClassBtn6");
 var ClassBtn7 = document.getElementById("ClassBtn7");
 
-
+var exitRoomBtn = document.getElementById("exitRoomBtn");
 var CenterBtn = document.getElementsByClassName("CenterBtn")[0];
 var UpperLeftText = document.getElementsByClassName("UpperLeftText")[0];
 var UpperRightText = document.getElementsByClassName("UpperRightText")[0];
@@ -24,6 +24,7 @@ var nameInput = document.getElementById("ityz1");
 var gameOverText = null;
 var gameChatTextBox = document.getElementById("gameChatTextBox");
 var gameChatInput = document.getElementById("gameChatInput");
+var troopPlacementInfoBox = null;
 
 var SubmitBtn = null;
 var SubmitBtnDiv = null;
@@ -76,29 +77,27 @@ var MouseIsPressed = false;
 window.onload = function () {
   socket = io.connect();
 
-  socket.on("test", (id) => {
-    console.log(id);
-  });
 
   socket.emit("connectToRoom", roomid);
   socket.on("connectToRoom", (connected) => {
     //idk
+    let temp = window.location.href.split("")
+    let i = temp.length - 1;
+    let z = 2;
+    while (z != 0) {
+      i--
+      if (temp[i] == "/")
+        z--;
+      temp.splice(temp.length - 1, 1);
+    }
+    exitRoomBtn.addEventListener("click", function () {
+      window.location.href = temp.join("");
+    })
     if (!connected) {
       nameInput.style.display = "none";
       CenterBtn.style.display = "inline";
       CenterBtn.textContent = "Room Doesnt Exist"
       CenterBtn.addEventListener("click", function () {
-
-        let temp = window.location.href.split("")
-        let i = temp.length - 1;
-        let z = 2;
-        while (z != 0) {
-          i--
-          if (temp[i] == "/")
-            z--;
-          temp.splice(temp.length - 1, 1);
-        }
-
         window.location.href = temp.join("");
       })
     } else {
@@ -118,10 +117,11 @@ function saveName(e) {
     nameInput.style.display = "none";
     gameChatInput.style.display = "inline";
     gameChatTextBox.style.display = "inline";
-    
+
     gameChatInput.addEventListener("keydown", (e) => {
-    sendMessage(e);
-  })
+      sendMessage(e);
+    })
+    socket.emit("sentMessage", name + " has joined!");
     socket.emit("playerName", name);
   }
 }
@@ -131,7 +131,7 @@ function startUp() {
   nameInput.addEventListener("keydown", (e) => {
     saveName(e);
   })
-  
+
 
   socket.emit("requestMessages");
 
@@ -146,7 +146,6 @@ function startUp() {
     PlayersReady = playersReady;
     GameState = gameState;
     MaxPlayers = maxPlayers;
-    console.log(gameState)
     Playing = playing;
     if (playing) {
       CenterBtn.textContent = "Click to Ready up! " + playersReady + "/" + maxPlayers + " Ready!";
@@ -179,11 +178,8 @@ function startUp() {
     Time = time;
     GameModeName = gameModeName;
     Troops = troops;
-    console.log(Playing);
     if (Playing) {
-      console.log(troops.length)
       for (let i = 0; i < troops.length; i++) {
-        console.log("Test")
         ClassBtnArray[i].src = "ClassLogos/" + troops[i].name + "Logo.jpg";
       }
     }
@@ -253,6 +249,12 @@ function startUp() {
       ctx = canvas.getContext("2d");
       SubmitBtnDiv.appendChild(canvas)
 
+      troopPlacementInfoBox = document.createElement('div');
+      troopPlacementInfoBox.className = "gpd-text"
+      troopPlacementInfoBox.id = "troopPlacementInfoBox"
+      troopPlacementInfoBox.textContent = "You may use the number keys to select troops. You may use backspace to delete troops. To select troops you may click on them or when your cursor is the default you may drag it in a rectangle selecting all troops inside."
+      SubmitBtnDiv.appendChild(troopPlacementInfoBox);
+
       SubmitBtn = document.createElement('button');
       SubmitBtn.className = "btn btn-primary SubmitBtn"
       SubmitBtn.width = "100%";
@@ -280,7 +282,6 @@ function startUp() {
 
   socket.on("submitTroops", (playersReady, userReady) => {
     PlayersReady = playersReady;
-    console.log(Playing, userReady);
     if (Playing) {
       if (userReady) {
         for (let i = 0; i < Troops.length; i++) {
@@ -310,15 +311,11 @@ function startUp() {
   socket.on("gameFinished", (winner) => {
     alphaLoop = setInterval(bluroutCanvas, 1000 / 30);
     Winner = winner;
-    if (winner == PlayerSide) {
-      console.log("winner!")
-    } else {
-      console.log("Loser")
-    }
   })
 
   socket.on("makeGameCanvas", () => {
     if (Playing) {
+      troopPlacementInfoBox.style.display = "none";
       try {
         SubmitBtn.parentNode.removeChild(SubmitBtn);
       } catch {}
@@ -327,11 +324,9 @@ function startUp() {
       DrawGame = true;
     } else {
       if (CenterBtn.style.backgroundColor != "#095a5e") {
-        console.log("Requested specating2")
         socket.emit("requestSpectating")
         //TODO
       } else {
-        console.log("Test")
         CenterBtn.textContent = "Click to Watch Game! It has Already Started!"; //HEREE
       }
       //inform specators that game started //TODO
@@ -359,45 +354,75 @@ function startUp() {
   })
 
   socket.on("requestBattlefieldInfo", (troops, projectiles, playerSide) => {
-    if (troops == null) {
-      console.log("bruh")
-    }
     TroopsOnBattlefield = troops;
     PlayerSide = playerSide
     drawTroops(troops);
     drawProjectiles(projectiles);
   })
 
-  socket.on("updateChat", (messages)=>{
+  socket.on("updateChat", (messages) => {
     updateChat(messages);
+  })
+
+  socket.on("playerDisconnected", () => {
+    troopPlacementInfoBox = document.createElement('div');
+    troopPlacementInfoBox.className = "gpd-text"
+    troopPlacementInfoBox.id = "playerDisconnectedInfoBox"
+    troopPlacementInfoBox.textContent = "Unfortunately a player has disconnect. Room will be deactivated. You may still use the chat, but in order to play a game please create a new room."
+    
+    if (nameInput.style.display == "none") {
+      //entered name
+      if (GameState == 0){
+        CenterBtn.style.display = "none"
+        middleGridCell.appendChild(troopPlacementInfoBox);
+      }else if (GameState == 1){
+        SubmitBtnDiv.parentNode.removeChild(SubmitBtnDiv);
+        middleGrid.appendChild(troopPlacementInfoBox);
+        middleGrid.style.alignItems = "center";
+        middleGrid.style.justifyContent = "center";
+        
+        for (let i = 0; i < Troops.length; i++) {
+          ClassBtnArray[i].style.visibility = "visible";
+        }
+  
+      }else{ 
+        SubmitBtnDiv.parentNode.removeChild(SubmitBtnDiv);
+        middleGrid.appendChild(troopPlacementInfoBox);
+        middleGrid.style.alignItems = "center";
+        middleGrid.style.justifyContent = "center";
+        if(gameOverText.style.display == "inline"){
+          gameOverText.style.display = "none"
+        }
+        for (let i = 0; i < Troops.length; i++) {
+          ClassBtnArray[i].style.visibility = "visible";
+        }
+  
+      }
+    } else {
+      nameInput.style.display = "none"
+      middleGridCell.appendChild(troopPlacementInfoBox);
+    }
   })
 }
 
-function updateChat(messages){
-  console.log("uodate CHat")
-  console.log(messages)
-  let moveScrollBar = gameChatTextBox.scrollTop == gameChatTextBox.scrollHeight;
+function updateChat(messages) {
+  let moveScrollBar = gameChatTextBox.scrollTop != gameChatTextBox.scrollHeight; // todo fix this 
   gameChatTextBox.value = "";
   for (let i = 0; i < messages.length; i++) {
     gameChatTextBox.value += messages[i];
-    if(i!= messages.length-1)
-    gameChatTextBox.value += "\n";
+    if (i != messages.length - 1)
+      gameChatTextBox.value += "\n";
   }
-  if(moveScrollBar)
+  if (moveScrollBar)
     gameChatTextBox.scrollTop = gameChatTextBox.scrollHeight;
-  // if(messages.length <6){
-  //   for (let i = 0; i < 6 - messages.length; i++) {
-  //     gameChatTextBox.value += "\n";
-  //   }
-  // }
 }
 
-function sendMessage(e){
-  if(e.keyCode == 13){
+function sendMessage(e) {
+  if (e.keyCode == 13) {
     message = gameChatInput.value;
     gameChatInput.value = "";
     var d = new Date();
-    fullMessage = name +" "+d.getHours()+":"+ (d.getMinutes() < 10 ? "0"+d.getMinutes() : d.getMinutes()) +":"+  d.getSeconds() +": "+message;
+    fullMessage = name + " " + d.getHours() + ":" + (d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes()) + ":" + d.getSeconds() + ": " + message;
     socket.emit("sentMessage", fullMessage);
   }
 }
@@ -406,13 +431,10 @@ function submitTroops() {
   for (let i = 0; i < TroopsOnCanvas.length; i++) {
     TroopsOnCanvas[i].highlight = false;
   }
-  console.log(TroopsOnCanvas);
   socket.emit("submitTroops", TroopsOnCanvas);
 }
 
 function bluroutCanvas() {
-  if (Playing || Spectating)
-    console.log(canvasAlpha)
   ctx.globalAlpha = canvasAlpha;
   canvasAlpha -= .1 / 6;
   if (canvasAlpha - .1 / 6 < 0) {
@@ -440,9 +462,8 @@ function gameOverScreen() {
     } else {
       gameOverText.textContent = "Defeat!"
     }
-  }
-  else{
-    gameOverText.textContent = PlayerNames[Winner] + " WIns!"
+  } else {
+    gameOverText.textContent = PlayerNames[Winner] + " Wins!"
   }
 }
 
@@ -508,7 +529,6 @@ function activateCenterBtn() {
         //game didnt start  
         CenterBtn.textContent = "Waiting on players to place Troops" + PlayersReady + "/" + MaxPlayers + " Ready!";
       } else {
-        console.log("Requested specating")
         socket.emit("requestSpectating")
         //start specating
       }
@@ -579,10 +599,6 @@ function mouseReleased() {
       LastMousePressInfo.y > y ? y : LastMousePressInfo.y,
       LastMousePressInfo.x < x ? x : LastMousePressInfo.x,
       LastMousePressInfo.y < y ? y : LastMousePressInfo.y)
-    console.log(LastMousePressInfo.x < x ? x : LastMousePressInfo.x,
-      LastMousePressInfo.y < y ? y : LastMousePressInfo.y,
-      LastMousePressInfo.x > x ? x : LastMousePressInfo.x,
-      LastMousePressInfo.y > y ? y : LastMousePressInfo.y)
   }
 }
 
@@ -594,14 +610,11 @@ function getTroopsInsideRect(x, y, dx, dy) {
   for (let i = 0; i < TroopsOnCanvas.length; i++) {
     px = TroopsOnCanvas[i].x * canvas.width;
     py = TroopsOnCanvas[i].y * canvas.height;
-    console.log(px, py)
-
     if (px >= x &&
       px <= dx &&
       py >= y &&
       py <= dy) {
       troopsInsideRectArray.push(i);
-      console.log("HI!")
       TroopsOnCanvas[i].highlight = true;
     }
   }
@@ -710,7 +723,6 @@ function draw() {
       x = mouseX
       y = document.documentElement.clientHeight + mouseY - window.screen.height * 7 / 100
       ctx.strokeRect(LastMousePressInfo.x, LastMousePressInfo.y, x - LastMousePressInfo.x, y - LastMousePressInfo.y);
-      console.log(LastMousePressInfo.x, LastMousePressInfo.y, x, y)
     } else if (currentTroop != null &&
       x - TroopSizes[currentTroop] / 2 > 0 &&
       x < canvas.width - lineWidth - TroopSizes[currentTroop] / 2 &&

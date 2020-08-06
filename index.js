@@ -1,8 +1,3 @@
-const e = require('express')
-const {
-    Template
-} = require('webpack')
-
 var express = require('express'),
     app = express(),
     server = require('http').createServer(app),
@@ -12,7 +7,6 @@ app.use('/', express.static(__dirname + '/public'))
 app.use('/game/:room', express.static(__dirname + '/public/game'))
 //server.listen(3000)
 server.listen(process.env.PORT)
-console.log('Listening on 3000')
 
 var serverTickRate = 64;
 
@@ -164,6 +158,7 @@ var Room = function () {
     this.projectile_id = 0;
     this.troop_id = 0;
     this.roomMessages = [];
+    this.playerDisconnected = false;
 }
 
 var Player = function () {
@@ -244,7 +239,6 @@ function SendRoomInfo(socket) {
 
 function createGame(troops, type, roomid) {
     room = Rooms[findRoom(roomid)];
-    console.log(findRoom(roomid))
     if (type == "default") {
         //TODO ******** fix for more epeopl
 
@@ -266,7 +260,6 @@ function createGame(troops, type, roomid) {
 
         room.gameLoop = setInterval(() => updateGame(roomid), 1000 / serverTickRate);
     }
-    console.log(troops);
 }
 
 function rectRectDistance(ax, ay, aw, ah, bx, by, bw, bh) {
@@ -343,7 +336,6 @@ function deleteProjectilesAimingAtEnemy(enemyid, index, roomid) {
         if (room.Projectiles[i].enemyid == enemyid && room.Projectiles[i].enemyid == enemyid) {
             if (index <= i)
                 temp++;
-            console.log("removed bullets")
             room.Projectiles.splice(i, 1)
             i--;
         }
@@ -366,7 +358,7 @@ function updateGame(roomid) {
         }
         if (playersDead == room.maxPlayers - 1) {
             //Game is done
-            console.log("Done!")
+
             clearInterval(room.gameLoop)
             let winner = 0;
             for (let i = 0; i < room.troops.length; i++) {
@@ -423,7 +415,6 @@ function updateGame(roomid) {
                         //     console.log(Projectiles[i].x, Projectiles[i].y, Tx,Ty, dist);
                         // }  
                         if (Math.abs(tx) < .005 && Math.abs(ty) < .005) { //Projectile hit
-                            console.log("deleted")
                             room.troops[enemyTroop.player][enemyTroop.troopIndex].hp -= room.Projectiles[i].damage;
                             //Problem 2 troops aiming at same person
 
@@ -485,7 +476,6 @@ function shotProjectile(OriginP, OriginT, enemyid, roomid) {
     speed = Troops[findTroop(room.troops[OriginP][OriginT].name)].projectileSpeed;
     size = Troops[findTroop(room.troops[OriginP][OriginT].name)].projectileSize;
     damage = Troops[findTroop(room.troops[OriginP][OriginT].name)].damage;
-    console.log(damage)
     name = room.troops[OriginP][OriginT].name;
     addProjectile(x, y, enemyid, speed, size, damage, name, OriginP, roomid, room.projectile_id);
     room.projectile_id++;
@@ -565,9 +555,6 @@ io.sockets.on('connection', socket => {
         room = Rooms[findRoom(socket.roomid)]
         if(room.gameState == 2){
             io.to(socket.id).emit("startSpecating")
-        }
-        else{
-            console.log("error")
         }
     })
 
@@ -649,6 +636,7 @@ io.sockets.on('connection', socket => {
                     room.players[i].ready = false;
 
                 }
+                SendRoomInfo(socket);
                 io.in(socket.roomid).emit("gameStarting");
             } else {
                 SendRoomInfo(socket);
@@ -689,6 +677,9 @@ io.sockets.on('connection', socket => {
                 Users[user].roomid = roomid
                 //specator
             }
+            if(Rooms[findRoom(roomid)].playerDisconnected){
+                socket.emit("playerDisconnected");
+            }
         }
     })
 
@@ -725,8 +716,11 @@ io.sockets.on('connection', socket => {
                 if (Users[i].playing) { //TODO if playing and leaves reset room....
                     for (let z = 0; z < Rooms[findRoom(Users[i].roomid)].players.length; z++) {
                         if (Rooms[findRoom(Users[i].roomid)].players[z].id === Users[i].id) {
-                            Rooms[findRoom(Users[i].roomid)].players.splice(z, 1)
+                            io.to(socket.roomid).emit("playerDisconnected");
                             Rooms[findRoom(Users[i].roomid)].gameState = 0;
+                            Rooms[findRoom(Users[i].roomid)].playerDisconnected = true;
+                            Rooms[findRoom(Users[i].roomid)].players.splice(z, 1)
+                            //TODO! make a specator a new player?
                         }
                     }
                 }
