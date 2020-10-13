@@ -153,7 +153,7 @@ function startUp() {
       if (GameState == 0) { //TODO
         CenterBtn.textContent = "Click to Watch Game! " + playersReady + "/" + maxPlayers + " Players Readied Up!";
       } else if (GameState == 1) { //TODO
-        CenterBtn.textContent = "Click to Watch Game! " + playersReady + "/" + maxPlayers + " Players have Placed Toops!";
+        CenterBtn.textContent = "Click to Watch Game! " + playersReady + "/" + maxPlayers + " Players have Placed Troops!";
       } else
         CenterBtn.textContent = "Click to Watch Game! It has Already Started!";
     }
@@ -301,7 +301,7 @@ function startUp() {
       if (CenterBtn.style.backgroundColor == "#095a5e")
         CenterBtn.textContent = "Waiting on players to place Troops" + playersReady + "/" + MaxPlayers + " Ready!";
       else {
-        CenterBtn.textContent = "Click to Watch Game! " + playersReady + "/" + MaxPlayers + " Players have Placed Toops!";
+        CenterBtn.textContent = "Click to Watch Game! " + playersReady + "/" + MaxPlayers + " Players have Placed Troops!";
       }
       //inform spectators TODO
 
